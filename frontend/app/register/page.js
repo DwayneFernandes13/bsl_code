@@ -3,17 +3,19 @@
 import { useState } from "react";
 
 export default function Register(){
-    const [form, setForm] = useState({username:``, email:``, password:``, role:`fan`});
+    const [form, setForm] = useState({username:``, email:``, password:``, role:`Fan`}); // default state
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        const response = await fetch('http:localhost:5000/register',{
+        // There was an option for Try
+        const response = await fetch(`http://localhost:5000/register`,{
             method: `POST`,
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(form),
         });
         const data = await response.json();
         alert(data.message || "Registration Failed");
+
     };
     return (
         <div className="auth-container">
