@@ -49,14 +49,14 @@ app.post('/register', async(req,res)=>{
 });
 
 // Test DB Connection
-db.getConnection((err, connection) => {
-    if(err){
-        console.error(`Database Connection at ${PORT} failed`, err.message);
-    } else {
-        console.log(`Connected to Database`);
-        connection.release();
-    }
-});
+// db.getConnection((err, connection) => {
+//     if(err){
+//         console.error(`Database Connection at ${PORT} failed`, err.message);
+//     } else {
+//         console.log(`Connected to Database`);
+//         connection.release();
+//     }
+// });
 
 app.post(`/register`, async (req,res)=>{
     const {username, email, password, role} = req.body;
@@ -93,24 +93,32 @@ try {
     }
 });
 
-// Login
+// OLD Login
 app.post(`/login`, async (req,res)=>{
     const {email, password} = req.body;
+    try {
+        const user = await db('users').where({email}).first();
 
-    db.query(
-        'SELECT * FROM users WHERE email =?', [email], async (err, results) => {
-            if(err || results.length === 0) return res.status(401).send("User not found");
+        if (!user){
+            return res.status(401).json({error:"User not found"});
+        }
+        // Comparing password with stored hash
+        const match = await bcrypt.compare(password, user.password_hash);
+        if (match){
+            const token = jwt.sign(
+                {id: user.id, role: user.role},
+                process.env.JWT_SECRET || 'SECRET_KEY',
+                {expiresIn:'1h'}
+            );
+            res.json({token, role: user.role, message: "Login Successful"});
+        } else {
+            res.status(401).json({error:"Wrong Password"});
+        }
+    } catch (err){
+        console.error(err);
+        res.status(500).json({error: "Internal Server Error"});
+    }
 
-            const user = results[0];
-            const match = await bcrypt.compare(password, user.password_hash);
-
-            if (match){
-                const token = jwt.sign({id: user.id, role: user.role}, `SECRET_KEY`, {expiresIn: `1h`});
-                res.json({token, role: user.role});
-            } else {
-                res.status(401).send("Wrong Password");
-            }
-        });
 });        
 
 const PORT = process.env.PORT || 5000;
