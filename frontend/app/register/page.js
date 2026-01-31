@@ -26,8 +26,8 @@ export default function Register(){
                 <input type="password" placeholder="Password" onChange={(e)=> setForm({...form, password: e.target.value})} required/>
                 <select onChange={(e)=> setForm({...form, role: e.target.value})}>
                     <option value="Fan">Fan</option>
-                    <option value="Player">Fan</option>
-                    <option value="Manager">Fan</option>
+                    <option value="Player">Player</option>
+                    <option value="Manager">Manager</option>
                     <option value="Owner">Owner</option>
                     <option value="Guest">Guest</option>
                 </select>
@@ -35,4 +35,5 @@ export default function Register(){
             </form>
         </div>
     );
-};
+
+}; 
