@@ -48,50 +48,10 @@ app.post('/register', async(req,res)=>{
     }
 });
 
-// Test DB Connection
-// db.getConnection((err, connection) => {
-//     if(err){
-//         console.error(`Database Connection at ${PORT} failed`, err.message);
-//     } else {
-//         console.log(`Connected to Database`);
-//         connection.release();
-//     }
-// });
+db.raw("SELECT 1")
+    .then(() =>console.log("MySQL Connected via knex"))
+    .catch((err) =>console.error("Database Connection Failed", err.message));
 
-app.post(`/register`, async (req,res)=>{
-    const {username, email, password, role} = req.body;
-// OLD Registration
-    //     const hash = await bcrypt.hash(password, 10); //Hashing the password
-
-//     db.query(
-//         'INSERT INTO users (username, email, password_hash, role) VALUES(?,?,?,?)',
-//         [username, email, hash, role],
-//         (err)=>{
-//             if(err) return res.status(500).send(err);
-//         }
-//     );
-// });
-
-// New Registration
-try {
-        const hash = await bcrypt.hash(password, 10);
-
-        db.query(
-            'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
-            [username, email, hash, role],
-            (err, result) => {
-                if (err) {
-                    console.error("Insert Error:", err.message);
-                    return res.status(500).json({ error: err.message });
-                }
-                // MUST SEND A RESPONSE ON SUCCESS
-                res.status(201).json({ message: "User registered successfully!", userId: result.insertId });
-            }
-        );
-    } catch (error) {
-        res.status(500).json({ error: "Server error during hashing" });
-    }
-});
 
 // OLD Login
 app.post(`/login`, async (req,res)=>{

@@ -27,6 +27,7 @@ export default function Login(){
             <form onSubmit={handleLogin}>
                 <input type="email" placeholder="Email" onChange={(e)=> setCredentials({...credentials, email: e.target.value})} required />
                 <input type="password" placeholder="Password" onChange={(e)=> setCredentials({...credentials, password: e.target.value})} required />
+                <button type="submit">Login</button>
             </form>
         </div>
     );
