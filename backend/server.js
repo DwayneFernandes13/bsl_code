@@ -79,7 +79,20 @@ app.post(`/login`, async (req,res)=>{
         res.status(500).json({error: "Internal Server Error"});
     }
 
-});        
+});
+
+const authorizeRole = (role) => {
+    return (req,res,next) => {
+//req.user comes from JWT verification 
+
+        if (req.user.role !==role){
+            return res.status(403).json({ error: "Access Denied: Unauthorized Role"});
+        }
+        next();
+    };
+};
+// Dated: 07/02/2026
+app.post(`/admin/create-league`, verifyToken, authorizeRole('Admin'), async (req, res) =>{});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server Running on Port ${PORT}`));

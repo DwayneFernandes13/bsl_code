@@ -19,6 +19,22 @@ export default function Login(){
         else{
             alert("Invalid Credentials");
         }
+
+        if (response.ok){
+            localStorage.setItem('token', data.token);
+
+            //Redirect Based on the role
+            if (data.role === 'Admin'){
+                window.location.href = `/admin-dashboard`;
+            }
+            else if (data.role === 'Player'){
+                window.location.href = `/player-profile`;
+            }
+            else {
+                window.location.href = `/dashboard`;
+            }
+        }
+
     };
 
     return (
