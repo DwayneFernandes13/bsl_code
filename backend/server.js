@@ -92,7 +92,22 @@ const authorizeRole = (role) => {
     };
 };
 // Dated: 07/02/2026
-app.post(`/admin/create-league`, verifyToken, authorizeRole('Admin'), async (req, res) =>{});
+
+// Example of a protected Admin route
+// app.post(`/admin/create-league`, verifyToken, authorizeRole('Admin'), async (req, res) =>{});
+
+const verifyToken = (req, res, next) => {
+    // Look for token in 'Authorization Header'
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split('')[1]; //Format: Bearer Token
+
+    if (!token){
+        return res.status(401).json
+    }
+};
+
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server Running on Port ${PORT}`));
